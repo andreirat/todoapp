@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from "typeorm";
 import { Field, Int, ObjectType } from "type-graphql";
+import { Task } from "./Task";
 
 @ObjectType()
 @Entity('users')
@@ -26,5 +27,8 @@ export class User extends BaseEntity {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Task, task => task.user)
+  tasks: Task[];
 
 }

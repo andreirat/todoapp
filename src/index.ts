@@ -2,10 +2,11 @@ import 'reflect-metadata';
 import express from 'express';
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
+import { createConnection } from "typeorm";
 import cookieParser from "cookie-parser";
 
+import { TaskResolver } from "./resolvers/task";
 import { UserResolver } from "./resolvers/user";
-import { createConnection } from "typeorm";
 
 (async () => {
   const app = express();
@@ -16,7 +17,7 @@ import { createConnection } from "typeorm";
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver]
+      resolvers: [UserResolver, TaskResolver]
     }),
     context: ({req, res}) => ({req, res})
   })
