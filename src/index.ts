@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import express from 'express';
+import cors from "cors";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
@@ -10,6 +11,10 @@ import { UserResolver } from "./resolvers/user";
 
 (async () => {
   const app = express();
+  app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+  }))
   app.use(cookieParser());
   app.get('/', (_req, res) => res.send('hello'))
 
@@ -22,7 +27,7 @@ import { UserResolver } from "./resolvers/user";
     context: ({req, res}) => ({req, res})
   })
   await apolloServer.start();
-  apolloServer.applyMiddleware({app});
+  apolloServer.applyMiddleware({app, cors: false});
 
   app.listen(4000, () => {
     console.log('Server started');

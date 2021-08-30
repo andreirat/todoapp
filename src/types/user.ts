@@ -4,10 +4,7 @@ import { Length } from "class-validator";
 @InputType()
 export class UserInput {
   @Field()
-  firstName: string;
-
-  @Field()
-  lastName: string;
+  name: string;
 
   @Field()
   email: string;

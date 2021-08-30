@@ -14,7 +14,7 @@ export class Task extends BaseEntity {
   taskName: string;
 
   @Field()
-  @Column("boolean", {default: false})
+  @Column("bool", {default: false})
   isCompleted: boolean;
 
   @ManyToOne(() => User, user => user.tasks)

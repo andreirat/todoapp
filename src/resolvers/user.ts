@@ -29,13 +29,21 @@ export class UserResolver {
     const user = await findOneBy({where: {email: loginInput.email}})
 
     if (!user) {
-      throw new Error("Could not find user")
+      return {
+        success: false,
+        accessToken: "",
+        message: "Invalid credentials"
+      }
     }
 
     const valid = await compare(loginInput.password, user.password)
 
     if (!valid) {
-      throw new Error("Invalid Credentials")
+      return {
+        accessToken: "",
+        success: false,
+        message: "Invalid credentials"
+      }
     }
 
     // Generate an set refresh token in cookie
@@ -43,7 +51,9 @@ export class UserResolver {
     res.cookie('rtid', refreshToken, {httpOnly: true})
 
     return {
-      accessToken: generateAccessToken(user)
+      accessToken: generateAccessToken(user),
+      success: true,
+      message: "Login successfully"
     }
   }
 
@@ -56,6 +66,7 @@ export class UserResolver {
     if (!refreshToken) {
       return {accessToken: null};
     }
+
     let response = null;
     try {
       response = verifyRefreshToken(refreshToken);
@@ -80,22 +91,31 @@ export class UserResolver {
     return {accessToken: generateAccessToken(user)};
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => LoginResponse)
   async register(@Arg("input") userInput: UserInput) {
     const encryptedPassword = await hash(userInput.password, 12)
+    let user;
 
     try {
 
-      await createUser({
+      user = await createUser({
         ...userInput,
         password: encryptedPassword
       })
 
     } catch (err) {
-      console.log(err)
-      return false;
+      console.error(err)
+      return {
+        accessToken: "",
+        success: false,
+        message: "An error occurred."
+      };
     }
 
-    return true;
+    return {
+      accessToken: generateAccessToken(user),
+      success: true,
+      message: "Register successfully"
+    };
   }
 }

@@ -12,12 +12,7 @@ export class User1630184329254 implements MigrationInterface {
           isPrimary: true
         },
         {
-          name: "firstName",
-          type: "varchar",
-          isNullable: false
-        },
-        {
-          name: "lastName",
+          name: "name",
           type: "varchar",
           isNullable: false
         },

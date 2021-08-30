@@ -6,8 +6,7 @@ function generateAccessToken(user: User, expiration: string = "1d"): any {
   const payload = {
     id: user.id,
     email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
+    name: user.name
   }
   return sign(payload, JWT_SECRET, {expiresIn: expiration})
 }
